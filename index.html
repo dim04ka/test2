@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+</head>
+<body>   
+
+    <style>
+        button {
+            margin-right: 20px;
+        }
+        .active {
+            border: 1px solid green;
+        }
+        .up::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: green;
+            position: relative;
+            top: -5px;
+            display: inline-block;
+        }
+        .down::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: green;
+            position: relative;
+            top: 5px;
+            display: inline-block;
+        }
+    </style>
+
+    <input type="text"><br>
+    <button class="btn-price" value="price">Price</button>
+    <button class="btn-price" value="date">Date</button>
+    <button class="btn-price" value="purchases">Purchases</button>
+    <hr>
+    <div class="result"></div>
+
+
+<script>
+ //let url = '/works/zakazat-diplomnuyu/ekonomika?page=2&date=desc';
+// let url = '/works/zakazat-diplomnuyu/ekonomika?prce=desc';
+//let url = '/works/zakazat-diplomnuyu/ekonomika?page=2';
+//let url = '/works/zakazat-diplomnuyu/ekonomika';
+
+let url = window.location.search;
+
+function getUrlParams(url = location.search){
+  var regex = /[?&]([^=#]+)=([^&#]*)/g, params = {}, match;
+  while(match = regex.exec(url)) {
+      params[match[1]] = match[2];
+  }
+  return params;
+}
+
+function isEmpty(obj) {
+    for(var key in obj) { return false; } return true;
+}
+
+    let res = getUrlParams(url);
+    let arrayKeys = ['price', 'date', 'purchases'];
+
+    function initializationFilters(){
+        let activeKeys,
+            activeValues
+
+        if (!isEmpty(res)) {
+           
+            for(var key in res) {
+                if (arrayKeys.includes(key)) {
+                    activeKeys = key
+                    activeValues = res[key]
+                }
+            }
+        }
+
+        $('.btn-price').each(function(el){
+            if (this.value == activeKeys) {
+                this.classList.add('active')
+
+                switch (activeValues){
+                    case 'desc':
+                    this.classList.add('up')
+                        break;
+                    case 'asc':
+                        this.classList.add('down')
+                        break
+                }
+            }
+        })
+    } 
+    initializationFilters()
+
+
+
+
+let up = true;
+$('.btn-price').click(function(){
+    
+    up = !up
+
+    let values = $(this).val()
+
+    /* 
+    *проверка на наличие активных классов 
+    */
+    $('.btn-price').each(function(idx,el){
+        $(el).removeClass('active up down')
+    })
+    $(this).addClass('active')
+    up ? $(this).addClass('up') : $(this).addClass('down')
+
+    if (isEmpty(res)) {
+        /*
+        * если в url не содержит параметров
+        */
+        //$('.result').html(`/?${values}=${up ? 'up': 'down' }`)
+        window.location=(`file:///D:/work/test/index.html?${values}=${up ? 'up': 'down' }`);
+    } else {
+
+        let str = '?';
+        let filter;
+
+        /*
+        * получаем строку window.location
+        * window.location
+        */
+        for(var key in res) {
+            if (key == 'page') {
+                str+=`${key}=${res[key]}`;
+            }
+            if (arrayKeys.includes(key)) {
+                    filter = res[key]
+                }
+        }
+        //str+=`${values}=${values}`;
+
+        switch (filter) {
+            case 'desc':
+                str+=`${values}=asc`;
+                break;
+            case 'asc':
+                str+=`${values}=desc`;
+                break
+        }
+        res = str
+
+
+        //window.location=res;
+        location.assign(res);
+
+
+        //str = str.substring(0, str.length - 1)
+        //console.log(res)
+        //$('.result').html(str)
+    }
+
+    
+})
+
+
+
+</script>   
+
+</body>
+</html>
