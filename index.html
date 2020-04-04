@@ -8,6 +8,8 @@
   src="https://code.jquery.com/jquery-3.4.1.min.js"
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
   crossorigin="anonymous"></script>
+
+  <script src='moment.js'></script>
 </head>
 <body>   
 
@@ -45,12 +47,21 @@
     <hr>
     <div class="result"></div>
 
+    
+
 
 <script>
  //let url = '/works/zakazat-diplomnuyu/ekonomika?page=2&date=desc';
 // let url = '/works/zakazat-diplomnuyu/ekonomika?prce=desc';
 //let url = '/works/zakazat-diplomnuyu/ekonomika?page=2';
 //let url = '/works/zakazat-diplomnuyu/ekonomika';
+
+var dateToFormat = "2018-05-16 12:57:13"; //TIMESTAMP
+let dates = moment(dateToFormat).format("DD.MM.YYYY"); 
+console.log(dates)
+
+
+
 
 let url = window.location.search;
 
